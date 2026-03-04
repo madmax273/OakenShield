@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="options.css">
+  <script src="../utils/storage.js"></script>
+  <script src="../core/stateManager.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+        <h1>Focus Guard Settings</h1>
+        <p>Define the keywords that distract you. We'll intercept searches and URLs containing them.</p>
+    </header>
+
+    <div class="keyword-section">
+        <h2>Banned Keywords</h2>
+        
+        <div class="add-keyword-bar">
+            <input type="text" id="keywordInput" placeholder="e.g. twitter, netflix, cricket" />
+            <button id="addKeywordBtn">Add Rule</button>
+        </div>
+
+        <ul class="keyword-list" id="keywordList">
+            <!-- Keywords will be populated here -->
+        </ul>
+    </div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

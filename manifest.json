@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Focus Guard",
+  "version": "1.0",
+  "description": "Client-Side Behavioral Firewall that intercepts distractions and builds focus.",
+  "permissions": ["storage", "tabs", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "utils/storage.js",
+        "core/keywordMatcher.js",
+        "content/modalInjector.js",
+        "content/domObserver.js",
+        "content/detector.js"
+      ],
+      "css": ["content/modalInjector.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*", "content/modalInjector.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

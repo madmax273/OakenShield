@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="popup.css" />
+    <script src="../utils/storage.js"></script>
+    <script src="../core/stateManager.js"></script>
+    <script src="../core/statsManager.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <div class="brand">
+        <h1>Focus Guard</h1>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="focusToggle" checked />
+        <span class="slider round"></span>
+      </label>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-box">
+        <div class="stat-value" id="statBlocked">0</div>
+        <div class="stat-label">Blocked</div>
+      </div>
+      <div class="stat-box success">
+        <div class="stat-value" id="statResisted">0</div>
+        <div class="stat-label">Resisted</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statContinued">0</div>
+        <div class="stat-label">Failed</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="manageBtn" class="btn-primary">Manage Keywords</button>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
