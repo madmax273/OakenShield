@@ -24,5 +24,12 @@ var StateManager = {
   },
   setFocusStatus: async function(focusEnabled) {
     await StorageManager.set({ focusEnabled: focusEnabled });
+  },
+  getTheme: async function() {
+    var data = await StorageManager.get({ theme: 'light' });
+    return data.theme;
+  },
+  setTheme: async function(theme) {
+    await StorageManager.set({ theme: theme });
   }
 };

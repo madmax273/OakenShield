@@ -1,12 +1,17 @@
 {
   "manifest_version": 3,
-  "name": "Focus Guard",
+  "name": "OakenShield",
   "version": "1.0",
   "description": "Client-Side Behavioral Firewall that intercepts distractions and builds focus.",
   "permissions": ["storage", "tabs", "activeTab", "scripting"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background/service-worker.js"
+  },
+  "icons": {
+    "16": "assets/icon.png",
+    "48": "assets/icon.png",
+    "128": "assets/icon.png"
   },
   "action": {
     "default_popup": "popup/popup.html"

@@ -8,8 +8,19 @@
 </head>
 <body>
   <div class="container">
-    <header>
-        <h1>Focus Guard Settings</h1>
+    <header style="position: relative;">
+        <!-- Close / Back Button -->
+        <button id="closeBtn" class="icon-btn" title="Close Settings" style="position: absolute; left: 0; top: 0; background: transparent; border: none; font-size: 24px; cursor: pointer; color: inherit;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <!-- Theme Toggle -->
+        <button id="themeToggle" class="icon-btn" title="Toggle Theme" style="position: absolute; right: 0; top: 0; background: transparent; border: none; cursor: pointer; color: inherit;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+        </button>
+        <div class="brand">
+            <img src="../assets/icon.png" class="brand-icon" alt="OakenShield Logo" />
+            <h1>OakenShield Settings</h1>
+        </div>
         <p>Define the keywords that distract you. We'll intercept searches and URLs containing them.</p>
     </header>
 
@@ -24,6 +35,11 @@
         <ul class="keyword-list" id="keywordList">
             <!-- Keywords will be populated here -->
         </ul>
+    </div>
+
+    <div style="margin-top: 48px; text-align: center; color: #94a3b8; font-size: 13px;">
+      <p style="margin: 0 0 4px 0;">Your data never leaves your browser.</p>
+      <p style="margin: 0;">v1.0.0</p>
     </div>
   </div>
   <script src="options.js"></script>

@@ -19,16 +19,24 @@
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
 
+    StorageManager.get({ theme: 'light' }).then(data => {
+        if (data.theme === 'dark') {
+            overlay.classList.add('dark-theme');
+        }
+    });
+
     overlay.innerHTML = `
       <div class="focus-guard-modal-card">
           <h2 class="focus-guard-modal-title">You promised yourself not to search this.</h2>
+          <p class="focus-guard-modal-desc" id="focus-guard-strict-timer" style="color: inherit; font-weight: 600; opacity: 0.8; margin-bottom: 16px;">⏳ 10 seconds remaining</p>
           <p class="focus-guard-modal-desc">Stay focused on your goals.<br>
             <span class="focus-guard-keyword-chip">Detected: ${keyword}</span>
           </p>
           <div class="focus-guard-actions">
               <button class="focus-guard-btn-primary" id="focus-guard-goback">Go Back</button>
-              <button class="focus-guard-btn-secondary" id="focus-guard-continue">Continue Anyway</button>
+              <button class="focus-guard-btn-secondary" id="focus-guard-continue" disabled style="opacity: 0.5; cursor: not-allowed;">Continue Anyway</button>
           </div>
+          <p style="margin-top: 24px; font-size: 12px; opacity: 0.5; text-align: center;">Disable anytime from extension settings.</p>
       </div>
     `;
 
@@ -38,6 +46,25 @@
     setTimeout(() => {
         overlay.classList.add('focus-guard-show');
     }, 10);
+
+    // Timer Logic
+    let timeLeft = 10;
+    const timerElement = document.getElementById('focus-guard-strict-timer');
+    const continueBtn = document.getElementById('focus-guard-continue');
+    
+    const timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerElement.style.display = 'none';
+            continueBtn.disabled = false;
+            continueBtn.style.opacity = '1';
+            continueBtn.style.cursor = 'pointer';
+            continueBtn.innerText = "Continue Anyway";
+        } else {
+            timerElement.innerText = `⏳ ${timeLeft} seconds remaining`;
+        }
+    }, 1000);
 
     // Trap Keyboard Focus
     const focusable = overlay.querySelectorAll('button');
