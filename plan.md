@@ -62,10 +62,16 @@ focus-guard/
 │ ├── options.js
 │ └── options.css
 │
+├── dashboard/
+│   ├── dashboard.html
+│   ├── dashboard.js
+│   └── dashboard.css
+│
 ├── core/
 │ ├── keywordMatcher.js
 │ ├── statsManager.js
-│ └── stateManager.js
+│ ├── stateManager.js
+│ └── timeTracker.js
 │
 ├── utils/
 │ └── storage.js

@@ -1,4 +1,5 @@
-importScripts('../utils/storage.js', '../core/stateManager.js', '../core/statsManager.js');
+importScripts('../utils/storage.js', '../core/stateManager.js', '../core/statsManager.js', '../core/timeTracker.js');
+
 
 let cachedKeywords = [];
 let isFocusEnabled = true;
@@ -48,3 +49,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 initCache();
+TimeTracker.init();
