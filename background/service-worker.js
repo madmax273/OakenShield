@@ -15,7 +15,7 @@ StatsManager.getStats();
 
 // Listen to storage changes to update cache
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'sync') {
+  if (area === 'local') {
     if (changes.keywords) cachedKeywords = changes.keywords.newValue;
     if (changes.focusEnabled) isFocusEnabled = changes.focusEnabled.newValue;
   }

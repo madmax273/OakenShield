@@ -3,7 +3,7 @@ const Dashboard = {
   labels: {},
   domainIcons: {},
   threshold: 30,
-  today: new Date().toISOString().split('T')[0],
+  today: StorageManager.getTodayDate(),
 
   init: async function() {
     await this.loadData();
@@ -60,13 +60,15 @@ const Dashboard = {
 
     if (entries.length === 0) {
       container.innerHTML = `<div class="empty-state"><p>No activity tracked yet exceeding your ${this.threshold}m threshold.</p></div>`;
-      this.updateStats(0, 0, 0);
+      this.updateStats(0, 0, 0, 0, 0);
+      this.updateSovereignBadge(0, 0);
       return;
     }
 
     let totalMinutes = 0;
     let productiveMinutes = 0;
     let wasteMinutes = 0;
+    let llmMinutes = 0;
     let neutralMinutes = 0;
 
     // Granular stats calculation
@@ -84,14 +86,39 @@ const Dashboard = {
 
       if (dLabel === 'productive') productiveMinutes += minutes;
       else if (dLabel === 'waste') wasteMinutes += minutes;
+      else if (dLabel === 'ai') llmMinutes += minutes;
       else neutralMinutes += minutes;
     });
 
     entries.forEach(([parent, data]) => {
-      const label = this.labels[parent] || 'neutral';
+      // Resultant Label Logic: Parent explicit label > Majority child label > Neutral
+      let resultantLabel = this.labels[parent];
+      
+      if (!resultantLabel && data.children.length > 0) {
+          const weights = { productive: 0, waste: 0, ai: 0, neutral: 0 };
+          data.children.forEach(child => {
+              const cLabel = this.labels[child.fullDomain] || 'neutral';
+              weights[cLabel] += child.minutes;
+          });
+
+          // Also account for the parent's base minutes (if any)
+          // In our grouping, 'parent' might have been a domain itself with time
+          const parentBaseMinutes = this.sessions[parent] || 0;
+          weights['neutral'] += parentBaseMinutes;
+
+          let maxMins = -1;
+          for (const [cat, mins] of Object.entries(weights)) {
+              if (mins > maxMins) {
+                  maxMins = mins;
+                  resultantLabel = cat;
+              }
+          }
+      }
+
+      if (!resultantLabel) resultantLabel = 'neutral';
 
       const groupItem = document.createElement('div');
-      groupItem.className = `session-group ${label}`;
+      groupItem.className = `session-group ${resultantLabel}`;
       
       const iconUrl = this.domainIcons[parent];
       const iconHtml = iconUrl ? `<img src="${iconUrl}" class="site-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
@@ -116,6 +143,7 @@ const Dashboard = {
                         <div class="child-time">${this.formatTime(child.minutes)}</div>
                         <div class="label-controls mini">
                             <button class="label-btn mini ${cLabel === 'productive' ? 'active productive' : ''}" data-domain="${child.fullDomain}" data-type="productive" title="Productive">P</button>
+                            <button class="label-btn mini ${cLabel === 'ai' ? 'active ai' : ''}" data-domain="${child.fullDomain}" data-type="ai" title="AI Interaction">A</button>
                             <button class="label-btn mini ${cLabel === 'neutral' ? 'active neutral' : ''}" data-domain="${child.fullDomain}" data-type="neutral" title="Neutral">N</button>
                             <button class="label-btn mini ${cLabel === 'waste' ? 'active waste' : ''}" data-domain="${child.fullDomain}" data-type="waste" title="Waste">W</button>
                         </div>
@@ -140,9 +168,10 @@ const Dashboard = {
           <div class="main-right">
             <div class="session-time">${this.formatTime(data.total)}</div>
             <div class="label-controls">
-              <button class="label-btn ${label === 'productive' ? 'active productive' : ''}" data-domain="${parent}" data-type="productive" title="Productive">P</button>
-              <button class="label-btn ${label === 'neutral' ? 'active neutral' : ''}" data-domain="${parent}" data-type="neutral" title="Neutral">N</button>
-              <button class="label-btn ${label === 'waste' ? 'active waste' : ''}" data-domain="${parent}" data-type="waste" title="Waste">W</button>
+              <button class="label-btn ${resultantLabel === 'productive' ? 'active productive' : ''}" data-domain="${parent}" data-type="productive" title="Productive">P</button>
+              <button class="label-btn ${resultantLabel === 'ai' ? 'active ai' : ''}" data-domain="${parent}" data-type="ai" title="AI Interaction">A</button>
+              <button class="label-btn ${resultantLabel === 'neutral' ? 'active neutral' : ''}" data-domain="${parent}" data-type="neutral" title="Neutral">N</button>
+              <button class="label-btn ${resultantLabel === 'waste' ? 'active waste' : ''}" data-domain="${parent}" data-type="waste" title="Waste">W</button>
             </div>
           </div>
         </div>
@@ -152,24 +181,38 @@ const Dashboard = {
       // Attach toggle listener if has children
       if (hasChildren) {
           const mainItem = groupItem.querySelector('.main-item');
+          
+          // Restore expanded state
+          if (this.expandedGroups && this.expandedGroups.has(parent)) {
+              groupItem.querySelector('.children-list').classList.remove('collapsed');
+              groupItem.querySelector('.expand-btn').style.transform = 'rotate(180deg)';
+          }
+
           mainItem.addEventListener('click', (e) => {
-              // Don't toggle if clicking a label button
               if (e.target.closest('.label-btn') || e.target.closest('.label-controls')) return;
               
               const list = groupItem.querySelector('.children-list');
               const btn = groupItem.querySelector('.expand-btn');
               const isCollapsed = list.classList.toggle('collapsed');
               btn.style.transform = isCollapsed ? 'rotate(0deg)' : 'rotate(180deg)';
+              
+              if (!this.expandedGroups) this.expandedGroups = new Set();
+              if (isCollapsed) {
+                  this.expandedGroups.delete(parent);
+              } else {
+                  this.expandedGroups.add(parent);
+              }
           });
       }
 
       container.appendChild(groupItem);
     });
 
-    this.updateStats(totalMinutes, productiveMinutes, wasteMinutes, neutralMinutes);
+    this.updateStats(totalMinutes, productiveMinutes, wasteMinutes, llmMinutes, neutralMinutes);
+    this.updateSovereignBadge(productiveMinutes, llmMinutes);
   },
 
-  updateStats: function(total, productive, waste, neutral) {
+  updateStats: function(total, productive, waste, llm, neutral) {
     const totalEl = document.getElementById('total-time');
     const prodEl = document.getElementById('productive-time');
     const wasteEl = document.getElementById('waste-time');
@@ -180,7 +223,27 @@ const Dashboard = {
     if (neutralEl) neutralEl.innerText = this.formatTime(neutral);
   },
 
+  updateSovereignBadge: function(prod, llm) {
+    const badge = document.getElementById('sovereign-badge');
+    if (!badge) return;
+
+    const total = prod + llm;
+    const agency = total > 0 ? (prod / total) * 100 : 100;
+
+    if (agency >= 80) {
+        badge.innerText = "🏅 Sovereign Mind";
+        badge.style.background = "linear-gradient(135deg, #10b981, #3b82f6)";
+    } else if (agency >= 50) {
+        badge.innerText = "⚡ Hybrid Focus";
+        badge.style.background = "linear-gradient(135deg, #f59e0b, #6366f1)";
+    } else {
+        badge.innerText = "⚠️ Cognitive Drift";
+        badge.style.background = "linear-gradient(135deg, #ef4444, #8b5cf6)";
+    }
+  },
+
   formatTime: function(minutes) {
+    if (isNaN(minutes) || minutes === undefined || minutes === null) return '0m';
     const h = Math.floor(minutes / 60);
     const m = Math.round(minutes % 60);
     if (h > 0) return `${h}h ${m}m`;
@@ -188,7 +251,25 @@ const Dashboard = {
   },
 
   attachListeners: function() {
+    // Back button listener
+    const backBtn = document.getElementById('dashboard-back');
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.close();
+            }
+        });
+    }
+
     // Threshold listener
+    const llmLink = document.getElementById('llm-link-card');
+    if (llmLink) {
+        llmLink.addEventListener('click', () => {
+            window.location.href = 'llm-tracker.html';
+        });
+    }
     const threshInput = document.getElementById('threshold-input');
     if (threshInput) {
         threshInput.addEventListener('change', async (e) => {
@@ -231,9 +312,52 @@ const Dashboard = {
         });
     }
 
+    // Reset today's stats listener
+    const resetBtn = document.getElementById('reset-today-btn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', async () => {
+            if (confirm("Are you sure you want to clear ALL activity tracked for today? This cannot be undone.")) {
+                const data = await StorageManager.get({ dailySessions: {} });
+                const dailySessions = data.dailySessions;
+                
+                // Clear today's entry
+                if (dailySessions[this.today]) {
+                    dailySessions[this.today] = {};
+                }
+                
+                // Also reset the stats from StatsManager (blocked, resisted, etc)
+                const statsData = await StorageManager.get({ stats: {} });
+                if (statsData.stats) {
+                    statsData.stats.blocked = 0;
+                    statsData.stats.resisted = 0;
+                    statsData.stats.continued = 0;
+                }
+
+                await StorageManager.set({ 
+                    dailySessions: dailySessions,
+                    stats: statsData.stats
+                });
+
+                // Update local state and re-render
+                this.sessions = {};
+                this.render();
+                
+                // Show feedback
+                resetBtn.innerText = "Cleared!";
+                resetBtn.style.background = "#10b981";
+                resetBtn.style.color = "white";
+                setTimeout(() => {
+                    resetBtn.innerText = "Reset Today's Stats";
+                    resetBtn.style.background = "rgba(239, 68, 68, 0.1)";
+                    resetBtn.style.color = "#ef4444";
+                }, 2000);
+            }
+        });
+    }
+
     // Storage change listener
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area === 'sync') {
+      if (area === 'local') {
         if (changes.theme) {
           this.applyTheme(changes.theme.newValue);
         }

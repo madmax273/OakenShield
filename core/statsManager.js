@@ -1,6 +1,6 @@
 var StatsManager = {
   getStats: async function() {
-    var today = new Date().toISOString().split('T')[0];
+    var today = StorageManager.getTodayDate();
     var defaultStats = {
       blocked: 0,
       resisted: 0,
