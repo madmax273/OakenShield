@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronicle | OakenShield Analytics</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="dashboard-wrapper">
+    <header>
+            <div class="header-top">
+              <div class="brand-group">
+                <button id="dashboard-back" class="back-btn-dashboard" title="Go Back">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                </button>
+                <div class="brand">
+                    <img src="../assets/icon.png" alt="OakenShield" class="brand-icon">
+                    <h1>Chronicle</h1>
+                </div>
+              </div>
+              <div class="badge privacy">Local Only</div>
+              <div id="status-badge-container">
+                  <div id="sovereign-badge" class="badge sovereign">Loading Level...</div>
+              </div>
+              <button id="themeToggle" class="icon-btn theme-toggle" title="Toggle Theme">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+              </button>
+            </div>
+            <p>Your digital footprint, refined.</p>
+        </header>
+
+        <main class="content-grid">
+            <!-- Summary Stats -->
+            <section class="stats-overview">
+                <div class="stat-card glass interactive">
+                    <span class="stat-label">Total Tracked Today</span>
+                    <span class="stat-value" id="total-time">0h 0m</span>
+                </div>
+                <div class="stat-card glass interactive">
+                    <span class="stat-label">Productive Time</span>
+                    <span class="stat-value" id="productive-time">0h 0m</span>
+                </div>
+                <div class="stat-card glass interactive">
+                    <span class="stat-label">Distraction Time</span>
+                    <span class="stat-value" id="waste-time">0m</span>
+                </div>
+                <div class="stat-card glass interactive">
+                    <span class="stat-label">Neutral Time</span>
+                    <span class="stat-value" id="neutral-time">0m</span>
+                </div>
+                <div id="llm-link-card" class="stat-card glass interactive primary-glow-on-hover" style="cursor: pointer; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(99, 102, 241, 0.1)); border: 1px solid rgba(139, 92, 246, 0.3);">
+                    <span class="stat-label" style="color: #8b5cf6; font-weight: 700; letter-spacing: 0.1em;">Mind Matrix</span>
+                    <span class="stat-value" style="font-size: 18px;">Open LLM Analyzer →</span>
+                </div>
+            </section>
+
+            <!-- Main Timeline/List -->
+            <section class="sessions-section glass">
+                <div class="section-header">
+                    <h2>Daily Activity</h2>
+                    <div class="filter-controls">
+                        <span id="current-date">Today, April 3</span>
+                    </div>
+                </div>
+
+                <div class="sessions-list" id="sessions-container">
+                    <div class="empty-state">
+                        <p>No activity tracked yet exceeding your threshold.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuration & Labels -->
+            <aside class="settings-sidebar glass">
+                <h2>Settings</h2>
+                <div class="setting-item">
+                    <label>Tracking Threshold</label>
+                    <div class="input-group">
+                        <input type="number" id="threshold-input" min="1" value="30">
+                        <span>min</span>
+                    </div>
+                    <p class="helper-text">Only sessions longer than this are tracked.</p>
+                </div>
+
+                <div class="setting-item">
+                    <label>Data Management</label>
+                    <button id="reset-today-btn" class="action-btn-danger">
+                        Reset Today's Stats
+                    </button>
+                    <p class="helper-text">This will clear all activity recorded for today.</p>
+                </div>
+
+                <div class="labels-manager">
+                    <h3>Legend</h3>
+                    <div class="legend-item">
+                        <span class="dot productive"></span>
+                        <span>Productive</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="dot waste"></span>
+                        <span>Waste</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="dot ai"></span>
+                        <span>AI / LLM</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="dot neutral"></span>
+                        <span>Neutral</span>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script src="../utils/storage.js"></script>
+    <script src="../core/stateManager.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

@@ -1,4 +1,5 @@
-importScripts('../utils/storage.js', '../core/stateManager.js', '../core/statsManager.js');
+importScripts('../utils/storage.js', '../core/stateManager.js', '../core/statsManager.js', '../core/timeTracker.js');
+
 
 let cachedKeywords = [];
 let isFocusEnabled = true;
@@ -14,7 +15,7 @@ StatsManager.getStats();
 
 // Listen to storage changes to update cache
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'sync') {
+  if (area === 'local') {
     if (changes.keywords) cachedKeywords = changes.keywords.newValue;
     if (changes.focusEnabled) isFocusEnabled = changes.focusEnabled.newValue;
   }
@@ -48,3 +49,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 initCache();
+TimeTracker.init();

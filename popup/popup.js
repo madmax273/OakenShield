@@ -41,4 +41,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.open(chrome.runtime.getURL('options/options.html'));
         }
     });
+
+    document.getElementById('dashBtn').addEventListener('click', () => {
+        window.open(chrome.runtime.getURL('dashboard/dashboard.html'));
+    });
+
 });

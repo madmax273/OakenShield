@@ -1,26 +1,18 @@
-/* Very premium glassmorphic full-screen overlay */
+/* Full-screen overlay with unified Chronicle theme */
 .focus-guard-modal-overlay {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  background: rgba(248, 250, 252, 0.85) !important; /* slate-50 */
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  z-index: 2147483647 !important; /* Max z-index */
+  background: rgba(248, 251, 255, 0.9) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  z-index: 2147483647 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-family:
-    "Inter",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
   opacity: 0;
   transition: opacity 0.4s ease-out !important;
 }
@@ -31,8 +23,8 @@
 
 .focus-guard-modal-card {
   background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(99, 102, 241, 0.1) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05) !important;
   border-radius: 24px !important;
   padding: 48px !important;
   text-align: center !important;
@@ -40,7 +32,7 @@
   max-width: 500px !important;
   width: 90% !important;
   transform: translateY(20px) scale(0.95);
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
 
 .focus-guard-modal-overlay.focus-guard-show .focus-guard-modal-card {
@@ -48,27 +40,30 @@
 }
 
 .focus-guard-modal-title {
-  font-size: 28px !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 32px !important;
   font-weight: 800 !important;
   margin: 0 0 16px 0 !important;
-  line-height: 1.3 !important;
-  color: #1e293b !important;
+  background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
 }
 
 .focus-guard-modal-desc {
   font-size: 16px !important;
   color: #64748b !important;
   margin: 0 0 32px 0 !important;
-  line-height: 1.5 !important;
+  line-height: 1.6 !important;
 }
 
 .focus-guard-keyword-chip {
   display: inline-block !important;
-  background: rgba(59, 130, 246, 0.1) !important; /* blue-500 with opacity */
-  color: #3b82f6 !important; /* blue-500 */
-  padding: 6px 16px !important;
-  border-radius: 20px !important;
-  font-weight: 600 !important;
+  background: rgba(59, 130, 246, 0.1) !important;
+  color: #3b82f6 !important;
+  padding: 8px 16px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
   font-size: 14px !important;
   margin-top: 12px !important;
   border: 1px solid rgba(59, 130, 246, 0.2) !important;
@@ -81,7 +76,7 @@
 }
 
 .focus-guard-btn-primary {
-  background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+  background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
   color: #ffffff !important;
   border: none !important;
   padding: 16px 24px !important;
@@ -90,68 +85,135 @@
   font-weight: 700 !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
 }
 
 .focus-guard-btn-primary:hover {
   transform: translateY(-2px) !important;
-  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.15) !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4) !important;
 }
 
 .focus-guard-btn-secondary {
   background: transparent !important;
   color: #64748b !important;
-  border: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
   padding: 12px !important;
+  border-radius: 12px !important;
   font-size: 14px !important;
   font-weight: 600 !important;
   cursor: pointer !important;
-  transition: color 0.2s ease !important;
-  text-decoration: none !important;
+  transition: all 0.2s ease !important;
 }
 
 .focus-guard-btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.02) !important;
   color: #1e293b !important;
-  text-decoration: underline !important;
 }
 
-/* Force body unscrollable */
-body.focus-guard-locked {
-  overflow: hidden !important;
-}
-
-/* Dark Theme overrides */
+/* Dark Theme Overrides */
 .focus-guard-modal-overlay.dark-theme {
-  background: rgba(10, 10, 12, 0.85) !important;
+  background: rgba(10, 10, 12, 0.95) !important;
 }
+
 .focus-guard-modal-overlay.dark-theme .focus-guard-modal-card {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
   color: #ffffff !important;
 }
+
 .focus-guard-modal-overlay.dark-theme .focus-guard-modal-title {
-  color: #ffffff !important;
+  background: linear-gradient(135deg, #ffffff, #94a3b8) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
 }
+
 .focus-guard-modal-overlay.dark-theme .focus-guard-modal-desc {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
 }
-.focus-guard-modal-overlay.dark-theme .focus-guard-keyword-chip {
-  background: rgba(255, 87, 87, 0.15) !important;
-  color: #ff5757 !important;
-  border: 1px solid rgba(255, 87, 87, 0.3) !important;
-}
+
 .focus-guard-modal-overlay.dark-theme .focus-guard-btn-primary {
   background: #ffffff !important;
   color: #000000 !important;
-  box-shadow: none !important;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1) !important;
 }
-.focus-guard-modal-overlay.dark-theme .focus-guard-btn-primary:hover {
-  box-shadow: 0 8px 16px rgba(255, 255, 255, 0.15) !important;
-}
+
 .focus-guard-modal-overlay.dark-theme .focus-guard-btn-secondary {
+  border-color: rgba(255, 255, 255, 0.1) !important;
   color: rgba(255, 255, 255, 0.5) !important;
 }
+
 .focus-guard-modal-overlay.dark-theme .focus-guard-btn-secondary:hover {
-  color: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #ffffff !important;
+}
+
+/* Think First Specifics */
+.think-first .focus-guard-modal-card {
+    background: rgba(10, 10, 12, 0.9) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    box-shadow: 0 0 50px rgba(139, 92, 246, 0.2) !important;
+    backdrop-filter: blur(30px) !important;
+    color: #ffffff !important;
+}
+
+.think-icon {
+    font-size: 64px !important;
+    margin-bottom: 24px !important;
+    filter: drop-shadow(0 0 15px #8b5cf6) !important;
+    animation: brainPulse 3s infinite ease-in-out !important;
+}
+
+@keyframes brainPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #8b5cf6); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 30px #8b5cf6); }
+}
+
+.think-timer-bar {
+    width: 100%;
+    height: 6px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 3px !important;
+    margin: 24px auto !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.think-timer-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #6366f1) !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5) !important;
+    transition: width 0.1s linear;
+}
+
+.timer-text {
+    font-size: 14px !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    margin-bottom: 24px !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.think-first .focus-guard-modal-title {
+    background: linear-gradient(135deg, #ffffff, #8b5cf6) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+}
+
+.think-first .focus-guard-modal-desc {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.focus-guard-btn-secondary.ready {
+    background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+    border: none !important;
+    color: white !important;
+    padding: 16px 32px !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    opacity: 1 !important;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
 }

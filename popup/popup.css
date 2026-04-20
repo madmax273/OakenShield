@@ -176,6 +176,25 @@ input:checked + .slider:before {
     0 4px 6px -2px rgba(59, 130, 246, 0.15);
 }
 
+.btn-secondary {
+  width: 100%;
+  background: transparent;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(59, 130, 246, 0.05);
+  transform: translateY(-1px);
+}
+
+
 @keyframes fadeInDown {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -259,3 +278,11 @@ body.dark-theme .btn-primary:hover {
   background: rgba(255, 255, 255, 0.2);
   box-shadow: none;
 }
+body.dark-theme .btn-secondary {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+body.dark-theme .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
