@@ -1,0 +1,92 @@
+#oakenshield-floating-icon-container {
+  position: fixed;
+  z-index: 2147483647;
+  width: 45px;
+  height: 45px;
+  cursor: grab;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  /* Transitions are managed by JS mostly, but fallback defined */
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease, border-radius 0.3s ease, background-color 0.3s ease;
+}
+
+#oakenshield-floating-icon-container:active {
+  cursor: grabbing;
+}
+
+#oakenshield-floating-icon-container:hover {
+  transform: scale(1.05) !important;
+  opacity: 1 !important;
+  border-radius: 50% !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+#oakenshield-floating-icon-container:hover .oakenshield-icon {
+  opacity: 1 !important;
+}
+
+#oakenshield-floating-icon-container.oakenshield-icon-hidden-right {
+  transform: translateX(39px); /* 45px width - 6px visible = 39px */
+  border-radius: 6px 0 0 6px;
+  background-color: #8b5cf6; /* Distracting sites badge color, a nice purple accent */
+  box-shadow: none;
+}
+
+#oakenshield-floating-icon-container.oakenshield-icon-hidden-left {
+  transform: translateX(-39px);
+  border-radius: 0 6px 6px 0;
+  background-color: #8b5cf6;
+  box-shadow: none;
+}
+
+/* Hide the icon image when it's transformed into a vertical bar */
+#oakenshield-floating-icon-container.oakenshield-icon-hidden-right .oakenshield-icon,
+#oakenshield-floating-icon-container.oakenshield-icon-hidden-left .oakenshield-icon {
+  opacity: 0;
+}
+
+.oakenshield-icon {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: opacity 0.3s ease;
+}
+
+.oakenshield-close-btn {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#oakenshield-floating-icon-container:hover .oakenshield-close-btn {
+  opacity: 1;
+  visibility: visible;
+}
+
+.oakenshield-close-btn:hover {
+  background-color: #d9363e;
+}

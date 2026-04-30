@@ -255,6 +255,7 @@ const Dashboard = {
     const backBtn = document.getElementById('dashboard-back');
     if (backBtn) {
         backBtn.addEventListener('click', () => {
+
             if (window.history.length > 1) {
                 window.history.back();
             } else {
