@@ -1,7 +1,9 @@
 (function() {
   chrome.runtime.onMessage.addListener((message) => {
-    if (message.type === "INJECT_MODAL") {
+    if (message.type === "INJECT_MODAL" && message.payload) {
       injectModal(message.payload.keyword);
+    } else if (message.type === "INJECT_THINK_FIRST" && message.payload) {
+      injectThinkFirst(message.payload.domain);
     }
   });
 
@@ -114,5 +116,70 @@
             document.body.classList.remove('focus-guard-locked');
         }, 400); // Wait for transition
     }
+  }
+
+  function injectThinkFirst(domain) {
+    if (document.getElementById('think-first-overlay')) return;
+    
+    document.body.classList.add('focus-guard-locked');
+    const overlay = document.createElement('div');
+    overlay.id = 'think-first-overlay';
+    overlay.className = 'focus-guard-modal-overlay focus-guard-show think-first';
+    
+    overlay.innerHTML = `
+      <div class="focus-guard-modal-card think-card">
+          <div class="think-icon">🧠</div>
+          <h2 class="focus-guard-modal-title">Cognitive Scaffold Active</h2>
+          <p class="focus-guard-modal-desc">
+            You are entering <strong>${domain}</strong>. <br>
+            Research suggests that independent thinking for just 2 minutes before prompting improves retention by 40%.
+          </p>
+          <div class="think-timer-bar">
+            <div id="think-timer" class="think-timer-progress"></div>
+          </div>
+          <p class="timer-text">Think for yourself for <span id="think-seconds">10</span>s...</p>
+          <div class="focus-guard-actions">
+               <button class="focus-guard-btn-secondary" id="think-skip" style="opacity: 0.3; cursor: not-allowed;" disabled>I've already thought it through</button>
+          </div>
+          <div class="think-preference" style="margin-top: 20px; font-size: 13px; opacity: 0.7; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <input type="checkbox" id="dont-show-think-first">
+              <label for="dont-show-think-first" style="cursor: pointer;">Don't show this for AI sites again</label>
+          </div>
+      </div>
+    `;
+
+    document.documentElement.appendChild(overlay);
+
+    let seconds = 10;
+    const skipBtn = document.getElementById('think-skip');
+    const secondsEl = document.getElementById('think-seconds');
+    const timerBar = document.getElementById('think-timer');
+
+    const interval = setInterval(() => {
+        seconds--;
+        if (secondsEl) secondsEl.innerText = seconds;
+        if (timerBar) timerBar.style.width = `${(seconds / 10) * 100}%`;
+
+        if (seconds <= 0) {
+            clearInterval(interval);
+            skipBtn.disabled = false;
+            skipBtn.style.opacity = '1';
+            skipBtn.style.cursor = 'pointer';
+            skipBtn.innerText = "Begin Interaction";
+            skipBtn.classList.add('ready');
+        }
+    }, 1000);
+
+    skipBtn.addEventListener('click', async () => {
+        const skipAlways = document.getElementById('dont-show-think-first').checked;
+        if (skipAlways) {
+            await StorageManager.set({ skipThinkFirst: true });
+        }
+        overlay.classList.remove('focus-guard-show');
+        setTimeout(() => {
+            overlay.remove();
+            document.body.classList.remove('focus-guard-locked');
+        }, 400);
+    });
   }
 })();

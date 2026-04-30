@@ -3,7 +3,8 @@
   "name": "OakenShield",
   "version": "1.0",
   "description": "Client-Side Behavioral Firewall that intercepts distractions and builds focus.",
-  "permissions": ["storage", "tabs", "activeTab", "scripting"],
+  "permissions": ["storage", "unlimitedStorage", "tabs", "activeTab", "scripting", "idle", "alarms"],
+
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background/service-worker.js"

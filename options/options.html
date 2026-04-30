@@ -2,29 +2,38 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="options.css">
   <script src="../utils/storage.js"></script>
   <script src="../core/stateManager.js"></script>
 </head>
-<body>
+<body class="dark-theme">
+  <div class="background-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
   <div class="container">
     <header style="position: relative;">
         <!-- Close / Back Button -->
-        <button id="closeBtn" class="icon-btn" title="Close Settings" style="position: absolute; left: 0; top: 0; background: transparent; border: none; font-size: 24px; cursor: pointer; color: inherit;">
+        <button id="closeBtn" class="icon-btn" title="Close Settings" style="position: absolute; left: 0; top: 0;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </button>
         <!-- Theme Toggle -->
-        <button id="themeToggle" class="icon-btn" title="Toggle Theme" style="position: absolute; right: 0; top: 0; background: transparent; border: none; cursor: pointer; color: inherit;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+        <button id="themeToggle" class="icon-btn theme-toggle" title="Toggle Theme" style="position: absolute; right: 0; top: 0;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
         </button>
         <div class="brand">
             <img src="../assets/icon.png" class="brand-icon" alt="OakenShield Logo" />
-            <h1>OakenShield Settings</h1>
+            <h1>Keyword Shield</h1>
         </div>
-        <p>Define the keywords that distract you. We'll intercept searches and URLs containing them.</p>
+        <p>Define the boundaries of your focus.</p>
     </header>
 
-    <div class="keyword-section">
+    <div class="keyword-section glass">
         <h2>Banned Keywords</h2>
         
         <div class="add-keyword-bar">
