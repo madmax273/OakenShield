@@ -39,6 +39,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   } else if (message.type === "GET_STATE") {
     sendResponse({ keywords: cachedKeywords, focusEnabled: isFocusEnabled });
+  } else if (message.type === "OPEN_DASHBOARD") {
+    const createProps = { url: chrome.runtime.getURL("dashboard/dashboard.html") };
+    if (sender && sender.tab) {
+      createProps.openerTabId = sender.tab.id;
+      createProps.index = sender.tab.index + 1;
+    }
+    chrome.tabs.create(createProps);
   } else if (message.type === "RESISTED") {
     StatsManager.increment('resisted');
   } else if (message.type === "CONTINUED") {

@@ -28,9 +28,13 @@
         "core/keywordMatcher.js",
         "content/modalInjector.js",
         "content/domObserver.js",
-        "content/detector.js"
+        "content/detector.js",
+        "content/floatingIcon.js"
       ],
-      "css": ["content/modalInjector.css"]
+      "css": [
+        "content/modalInjector.css",
+        "content/floatingIcon.css"
+      ]
     }
   ],
   "web_accessible_resources": [
