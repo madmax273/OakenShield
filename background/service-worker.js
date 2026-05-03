@@ -3,6 +3,7 @@ importScripts('../utils/storage.js', '../core/stateManager.js', '../core/statsMa
 
 let cachedKeywords = [];
 let isFocusEnabled = true;
+let cacheReady = initCache();
 
 // Initialize cache
 async function initCache() {
@@ -39,7 +40,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }).catch(() => {});
     }
   } else if (message.type === "GET_STATE") {
-    sendResponse({ keywords: cachedKeywords, focusEnabled: isFocusEnabled });
+    cacheReady.then(() => {
+      sendResponse({ keywords: cachedKeywords, focusEnabled: isFocusEnabled });
+    });
   } else if (message.type === "OPEN_DASHBOARD") {
     const createProps = { url: chrome.runtime.getURL("dashboard/dashboard.html") };
     if (sender && sender.tab) {
@@ -55,5 +58,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true; // async response if needed
 });
 
-initCache();
 TimeTracker.init();

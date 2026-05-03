@@ -33,10 +33,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         keywords.forEach(kw => {
             const li = document.createElement('li');
             li.className = 'keyword-item';
-            li.innerHTML = `
-                <span class="keyword-text">${kw}</span>
-                <button class="remove-btn" data-keyword="${kw}">&times;</button>
-            `;
+            const keywordText = document.createElement('span');
+            keywordText.className = 'keyword-text';
+            keywordText.textContent = kw;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-btn';
+            removeBtn.dataset.keyword = kw;
+            removeBtn.textContent = 'x';
+
+            li.append(keywordText, removeBtn);
             keywordList.appendChild(li);
         });
 
