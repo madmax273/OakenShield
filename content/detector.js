@@ -13,7 +13,7 @@
 
   // Listen to storage changes to remain synced instantly
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'sync') {
+    if (area === 'local') {
       if (changes.keywords) detectorKeywords = changes.keywords.newValue;
       if (changes.focusEnabled) focusEnabled = changes.focusEnabled.newValue;
     }

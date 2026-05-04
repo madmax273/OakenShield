@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const themeBtn = document.getElementById('themeToggle');
     const closeBtn = document.getElementById('closeBtn');
+    const focusToggle = document.getElementById('focusToggle');
 
     // Handle close button
     closeBtn.addEventListener('click', () => {
@@ -17,9 +18,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.body.classList.add('dark-theme');
     }
 
+    // Load focus mode state
+    const isFocusEnabled = await StateManager.getFocusStatus();
+    focusToggle.checked = isFocusEnabled;
+
     themeBtn.addEventListener('click', async () => {
         const isDark = document.body.classList.toggle('dark-theme');
         await StateManager.setTheme(isDark ? 'dark' : 'light');
+    });
+
+    // Focus mode toggle
+    focusToggle.addEventListener('change', async (e) => {
+        await StateManager.setFocusStatus(e.target.checked);
     });
 
     async function renderKeywords() {
@@ -33,10 +43,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         keywords.forEach(kw => {
             const li = document.createElement('li');
             li.className = 'keyword-item';
-            li.innerHTML = `
-                <span class="keyword-text">${kw}</span>
-                <button class="remove-btn" data-keyword="${kw}">&times;</button>
-            `;
+            const keywordText = document.createElement('span');
+            keywordText.className = 'keyword-text';
+            keywordText.textContent = kw;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-btn';
+            removeBtn.dataset.keyword = kw;
+            removeBtn.textContent = 'x';
+
+            li.append(keywordText, removeBtn);
             keywordList.appendChild(li);
         });
 

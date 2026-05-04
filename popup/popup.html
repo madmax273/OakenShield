@@ -17,10 +17,13 @@
         <button id="themeToggle" class="icon-btn" title="Toggle Theme" style="color: inherit;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
         </button>
-        <label class="switch">
-          <input type="checkbox" id="focusToggle" checked />
-          <span class="slider round"></span>
-        </label>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+          <label class="switch" title="Toggle Floating Desktop Icon">
+            <input type="checkbox" id="floatingIconToggle" checked />
+            <span class="slider round"></span>
+          </label>
+          <span style="font-size:9px; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; font-weight:500;">Floating Icon</span>
+        </div>
       </div>
     </div>
 

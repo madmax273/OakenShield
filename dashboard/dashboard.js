@@ -5,6 +5,27 @@ const Dashboard = {
   threshold: 30,
   today: StorageManager.getTodayDate(),
 
+  escapeHtml: function(value) {
+    return String(value || '').replace(/[&<>"']/g, function(char) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char];
+    });
+  },
+
+  getSafeImageUrl: function(value) {
+    try {
+      const url = new URL(String(value || ''));
+      return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : '';
+    } catch (e) {
+      return '';
+    }
+  },
+
   init: async function() {
     await this.loadData();
     this.render();
@@ -120,9 +141,11 @@ const Dashboard = {
       const groupItem = document.createElement('div');
       groupItem.className = `session-group ${resultantLabel}`;
       
-      const iconUrl = this.domainIcons[parent];
-      const iconHtml = iconUrl ? `<img src="${iconUrl}" class="site-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
-      const fallbackIconHtml = `<div class="site-icon" style="${iconUrl ? 'display:none' : 'display:flex'}">${parent[0].toUpperCase()}</div>`;
+      const safeParent = this.escapeHtml(parent);
+      const parentInitial = this.escapeHtml((parent[0] || '?').toUpperCase());
+      const iconUrl = this.getSafeImageUrl(this.domainIcons[parent]);
+      const iconHtml = iconUrl ? `<img src="${this.escapeHtml(iconUrl)}" class="site-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
+      const fallbackIconHtml = `<div class="site-icon" style="${iconUrl ? 'display:none' : 'display:flex'}">${parentInitial}</div>`;
 
       const hasChildren = data.children.length > 0;
       const chevronHtml = hasChildren ? `
@@ -136,16 +159,18 @@ const Dashboard = {
           childrenHtml = `<div class="children-list collapsed">
             ${data.children.sort((a,b) => b.minutes - a.minutes).map(child => {
                 const cLabel = this.labels[child.fullDomain] || 'neutral';
+                const safeChildName = this.escapeHtml(child.name);
+                const safeChildDomain = this.escapeHtml(child.fullDomain);
                 return `
                 <div class="child-item">
-                    <div class="child-name" title="${child.name}">${child.name}</div>
+                    <div class="child-name" title="${safeChildName}">${safeChildName}</div>
                     <div class="child-right">
                         <div class="child-time">${this.formatTime(child.minutes)}</div>
                         <div class="label-controls mini">
-                            <button class="label-btn mini ${cLabel === 'productive' ? 'active productive' : ''}" data-domain="${child.fullDomain}" data-type="productive" title="Productive">P</button>
-                            <button class="label-btn mini ${cLabel === 'ai' ? 'active ai' : ''}" data-domain="${child.fullDomain}" data-type="ai" title="AI Interaction">A</button>
-                            <button class="label-btn mini ${cLabel === 'neutral' ? 'active neutral' : ''}" data-domain="${child.fullDomain}" data-type="neutral" title="Neutral">N</button>
-                            <button class="label-btn mini ${cLabel === 'waste' ? 'active waste' : ''}" data-domain="${child.fullDomain}" data-type="waste" title="Waste">W</button>
+                            <button class="label-btn mini ${cLabel === 'productive' ? 'active productive' : ''}" data-domain="${safeChildDomain}" data-type="productive" title="Productive">P</button>
+                            <button class="label-btn mini ${cLabel === 'ai' ? 'active ai' : ''}" data-domain="${safeChildDomain}" data-type="ai" title="AI Interaction">A</button>
+                            <button class="label-btn mini ${cLabel === 'neutral' ? 'active neutral' : ''}" data-domain="${safeChildDomain}" data-type="neutral" title="Neutral">N</button>
+                            <button class="label-btn mini ${cLabel === 'waste' ? 'active waste' : ''}" data-domain="${safeChildDomain}" data-type="waste" title="Waste">W</button>
                         </div>
                     </div>
                 </div>
@@ -162,16 +187,16 @@ const Dashboard = {
               ${fallbackIconHtml}
             </div>
             <div class="site-info">
-              <h4>${parent}</h4>
+              <h4>${safeParent}</h4>
             </div>
           </div>
           <div class="main-right">
             <div class="session-time">${this.formatTime(data.total)}</div>
             <div class="label-controls">
-              <button class="label-btn ${resultantLabel === 'productive' ? 'active productive' : ''}" data-domain="${parent}" data-type="productive" title="Productive">P</button>
-              <button class="label-btn ${resultantLabel === 'ai' ? 'active ai' : ''}" data-domain="${parent}" data-type="ai" title="AI Interaction">A</button>
-              <button class="label-btn ${resultantLabel === 'neutral' ? 'active neutral' : ''}" data-domain="${parent}" data-type="neutral" title="Neutral">N</button>
-              <button class="label-btn ${resultantLabel === 'waste' ? 'active waste' : ''}" data-domain="${parent}" data-type="waste" title="Waste">W</button>
+              <button class="label-btn ${resultantLabel === 'productive' ? 'active productive' : ''}" data-domain="${safeParent}" data-type="productive" title="Productive">P</button>
+              <button class="label-btn ${resultantLabel === 'ai' ? 'active ai' : ''}" data-domain="${safeParent}" data-type="ai" title="AI Interaction">A</button>
+              <button class="label-btn ${resultantLabel === 'neutral' ? 'active neutral' : ''}" data-domain="${safeParent}" data-type="neutral" title="Neutral">N</button>
+              <button class="label-btn ${resultantLabel === 'waste' ? 'active waste' : ''}" data-domain="${safeParent}" data-type="waste" title="Waste">W</button>
             </div>
           </div>
         </div>
@@ -231,13 +256,13 @@ const Dashboard = {
     const agency = total > 0 ? (prod / total) * 100 : 100;
 
     if (agency >= 80) {
-        badge.innerText = "🏅 Sovereign Mind";
+        badge.innerText = "Sovereign Mind";
         badge.style.background = "linear-gradient(135deg, #10b981, #3b82f6)";
     } else if (agency >= 50) {
-        badge.innerText = "⚡ Hybrid Focus";
+        badge.innerText = "Hybrid Focus";
         badge.style.background = "linear-gradient(135deg, #f59e0b, #6366f1)";
     } else {
-        badge.innerText = "⚠️ Cognitive Drift";
+        badge.innerText = "Cognitive Drift";
         badge.style.background = "linear-gradient(135deg, #ef4444, #8b5cf6)";
     }
   },

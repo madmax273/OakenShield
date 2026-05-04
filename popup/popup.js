@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Load state
-    const isFocusEnabled = await StateManager.getFocusStatus();
-    document.getElementById('focusToggle').checked = isFocusEnabled;
+    // Load floating icon state
+    const isFloatingIconEnabled = await StateManager.getFloatingIconStatus();
+    document.getElementById('floatingIconToggle').checked = isFloatingIconEnabled;
 
     // Load theme
     const theme = await StateManager.getTheme();
@@ -29,10 +29,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('statContinued').innerText = stats.continued || 0;
 
     // Toggle logic
-    document.getElementById('focusToggle').addEventListener('change', async (e) => {
-        await StateManager.setFocusStatus(e.target.checked);
+    document.getElementById('floatingIconToggle').addEventListener('change', async (e) => {
+        await StateManager.setFloatingIconStatus(e.target.checked);
+        // Notify all tabs to update floating icon visibility
+        const tabs = await chrome.tabs.query({});
+        tabs.forEach(tab => {
+            chrome.tabs.sendMessage(tab.id, { 
+                type: 'FLOATING_ICON_TOGGLE', 
+                enabled: e.target.checked 
+            }).catch(() => {});
+        });
     });
 
+    
     // Option page redirect
     document.getElementById('manageBtn').addEventListener('click', () => {
         if (chrome.runtime.openOptionsPage) {

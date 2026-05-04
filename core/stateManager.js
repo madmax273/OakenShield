@@ -31,5 +31,12 @@ var StateManager = {
   },
   setTheme: async function(theme) {
     await StorageManager.set({ theme: theme });
+  },
+  getFloatingIconStatus: async function() {
+    var data = await StorageManager.get({ floatingIconEnabled: true });
+    return data.floatingIconEnabled;
+  },
+  setFloatingIconStatus: async function(floatingIconEnabled) {
+    await StorageManager.set({ floatingIconEnabled: floatingIconEnabled });
   }
 };
